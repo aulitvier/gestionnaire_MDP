@@ -6,4 +6,3 @@ class SignupForm(forms.Form):
     last_name = forms.CharField(max_length=30)
     first_name = forms.CharField(max_length=30)
     birthdate = forms.DateField(input_formats=['%d/%m/%Y'])
-    
