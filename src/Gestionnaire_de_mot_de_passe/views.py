@@ -7,5 +7,11 @@ def homePage(request):
 
 
 def signup(request):
+
+    if request.method == "POST": # vérifie la méthode
+        form = SignupForm(request.POST) # récupère les données du formulaire sous forme d'un dictionnaire
+        if form.is_valid(): # valide ou non les données
+            print(form.cleaned_data) # convertie les données de html en python
+    
     form = SignupForm()
     return render(request, "accounts/signup.html", {"form":form})
