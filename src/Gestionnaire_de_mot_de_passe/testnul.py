@@ -25,11 +25,15 @@
 #             liste_mots = liste_mots.remove(i)
 #     print(finded)
 
-chaine = "zrfzeozdzcffzuzfzeu"
-lettres_recherchees = ['o', 'u']
-i = 0
+# chaine = "ozrfzeozdzcffzuzfzeu"
+# lettres_recherchees = ['o', 'u']
+# i = 0
 
-for caractere in chaine:
-    if caractere in lettres_recherchees:
-        i += 1
-print(i)
+# for caractere in chaine:
+#     if caractere in lettres_recherchees:
+#         i += 1
+#         break
+#     else :
+#         print("1")
+#     print("E")
+# print(i)

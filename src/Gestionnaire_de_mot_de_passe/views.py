@@ -13,5 +13,4 @@ def signup(request):
         if form.is_valid(): # valide ou non les données
             print(form.cleaned_data) # convertie les données de html en python
     
-    form = SignupForm()
     return render(request, "accounts/signup.html", {"form":form})
