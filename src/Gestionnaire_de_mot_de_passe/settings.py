@@ -78,8 +78,12 @@ WSGI_APPLICATION = 'Gestionnaire_de_mot_de_passe.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'gestionnaire_MDP',
+        'USER': 'olivi',
+        'PASSWORD': 'olivi852',
+        'HOST': 'localhost',
+        'PORT': '5432',
         
     }
 }
