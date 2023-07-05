@@ -1,3 +1,4 @@
+from datetime import datetime
 from django import forms
 import re
 class SignupForm(forms.Form):
@@ -31,8 +32,9 @@ class SignupForm(forms.Form):
     # vérifie que la date de naissance a la syntaxe suivante : 01/07/2021
     def clean_birthdate(self):
         birthdate = self.cleaned_data.get("birthdate")
-
-        if re.match(r"^\d{2}/\d{2}/\d{4}$", birthdate):
-            return birthdate
-        else:
+        birthdate = str(birthdate)
+        try:
+            birthdate_str = datetime.strptime(birthdate, "%Y-%m-%d")
+            return birthdate_str
+        except ValueError:
             raise forms.ValidationError("Format de date invalide. Veuillez écrire la date dans la syntaxe suivante : JJ/MM/AAAA")
