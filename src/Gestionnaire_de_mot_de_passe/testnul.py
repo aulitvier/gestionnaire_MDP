@@ -37,3 +37,17 @@
 #         print("1")
 #     print("E")
 # print(i)
+
+from django.contrib.auth.hashers import make_password
+
+# def measure_pbkdf2_speed():
+#     password = 'Oli458$&!TGS'
+#     # nbtent = 100000  # Nombre d'itérations à mesurer
+#     # duration = timeit.timeit(lambda: make_password(password, iterations=nbtent), number=1)
+#     # print(f"Temps d'exécution PBKDF2 : {duration} secondes")
+#     # iterations = PBKDF2PasswordHasher.iterations * 100
+
+# password = 'Oli458$&!TGS'
+# my_password = make_password(password)
+
+# print(my_password)
