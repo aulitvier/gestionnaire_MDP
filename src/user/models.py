@@ -1,15 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-# Create your models here.
-# class SignupUser(models.Model):
-#     email = models.CharField(max_length=50, unique=True)
-#     password = models.TextField()
-#     lastName = models.CharField(max_length=50)
-#     firstName = models.CharField(max_length=50)
-#     birthDate = models.DateField()
-#     premium = models.BooleanField(default=False)
-
 
 
 class MyUserManager(BaseUserManager):

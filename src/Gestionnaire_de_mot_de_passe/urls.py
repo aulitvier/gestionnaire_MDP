@@ -19,9 +19,9 @@ from django.urls import include, path
 from . import views
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('signup/', views.signup, name="signup"),
-    path('', include('django.contrib.auth.urls')),
+    path('signup/', views.signup, name="signup"),# url pour s'inscrire
+    path('', include('django.contrib.auth.urls')), # url pour se connecter
     # path('homePage/', views.homePage, name="homepage"),
-    path('accounts/profile/', views.homePageLogin, name="homepage"),
+    path('accounts/profile/', views.homePageLogin, name="homepage"), # url aprés connexion
 
 ]
