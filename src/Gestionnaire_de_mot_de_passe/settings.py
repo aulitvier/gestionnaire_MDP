@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 from pathlib import Path
 from django.conf import global_settings
 from django.conf.global_settings import AUTH_USER_MODEL
@@ -78,14 +80,17 @@ WSGI_APPLICATION = 'Gestionnaire_de_mot_de_passe.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+dotenv_path = join(dirname(__file__), 'envvar')
+load_dotenv(dotenv_path)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'gestionnaire_MDP',
-        'USER': 'olivi',
-        'PASSWORD': 'olivi852',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('USER_NAME'),
+        'PASSWORD': os.environ.get('PASSWORD'),
+        'HOST': os.environ.get('HOST'),
+        'PORT': os.environ.get('PORT'),
     }
 }
 
