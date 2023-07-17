@@ -80,8 +80,8 @@ WSGI_APPLICATION = 'Gestionnaire_de_mot_de_passe.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-dotenv_path = join(dirname(__file__), 'envvar')
-load_dotenv(dotenv_path)
+dotenv_path = join(dirname(__file__), 'envvar') # Construire le chemin absolu du fichier envvar à partir du fichier courant (settings.py)
+load_dotenv(dotenv_path) # Charger les variables d'environnement à partir du fichier envvar
 
 DATABASES = {
     'default': {

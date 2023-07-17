@@ -2,6 +2,7 @@
 
 
 src/Gestionnaire_de_mot_de_passe/envvar
+src/Gestionnaire_de_mot_de_passe/testnul.py
 *.log
 *.pot
 *.pyc
