@@ -17,11 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from . import views
-urlpatterns = [
-    # path('admin/', admin.site.urls),
-    path('signup/', views.signup, name="signup"),# url pour s'inscrire
-    path('', include('django.contrib.auth.urls')), # url pour se connecter
-    # path('homePage/', views.homePage, name="homepage"),
-    path('accounts/profile/', views.homePageLogin, name="homepage"), # url aprés connexion
 
+urlpatterns = [
+    path('signup/', views.signup, name="signup"),# url pour s'inscrire
+    path('account/', include(('django.contrib.auth.urls', 'admin'), namespace='admin')), # url pour se connecter
+    path('accounts/profile/', views.homePageLogin, name="homepage"), # url aprés connexion
+    path('username/', views.usernamePage),
+    path('account/logout/', views.index)
 ]

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Identifiant(s)</title>
+</head>
+<body>
+    <p>c'est ici que vous pouvez gérer vos identifiants</p>
+    <form method="POST">
+        <table>
+            {% csrf_token %}
+            {{ username_form.as_table }}
+        </table>
+        <input type="submit" value="créer">
+    </form>
+    {{ message }}
+</body>
+</html>

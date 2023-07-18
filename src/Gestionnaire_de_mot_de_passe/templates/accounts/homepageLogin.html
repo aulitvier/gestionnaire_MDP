@@ -5,7 +5,7 @@
     <title>Document</title>
 </head>
 <body>
-        <h1>Bienvenue</h1>
-            <!-- {{ form.[email] }} -->
+        <h1>Bienvenue {{ form }}</h1>
+        <a href="{% url 'admin:logout' %}">Déconnexion</a>
 </body>
 </html>
