@@ -1,7 +1,9 @@
+from typing import Any, Dict
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import CreateView, TemplateView, ListView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, TemplateView, ListView, UpdateView
 
 # Create your views here.
 
@@ -11,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import customUser, Username
 from .forms import UsernameForm
+
 
 @method_decorator(login_required(login_url="/account/login"), name="post")
 class UsernameCreateView(CreateView):
@@ -35,6 +38,12 @@ class UsernameCreateView(CreateView):
     
     def get_success_url(self):
         return "create-username-success"
+    
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["submit_text"] = "Modifier"
+        return context
+
 
 class TemplateUsernameView(TemplateView):
     template_name = "identifier_manage/success_username_create.html"
@@ -50,5 +59,17 @@ class DisplayUsernameView(ListView):
 
         # Filtrer les articles dont l'auteur a le même ID que l'utilisateur connecté
         queryset = Username.objects.filter(User_id=user_id)
-
         return queryset
+    
+
+@method_decorator(login_required(login_url="/account/login"), name="post")
+class UsernameUpdateView(UpdateView):
+    model = Username
+    template_name = "identifier_manage/username.html"
+    fields = ['username']  # Les champs que vous souhaitez modifier dans le formulaire
+    success_url = reverse_lazy('username_display')
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["submit_text"] = "Modifier"
+        return context

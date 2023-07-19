@@ -8,6 +8,7 @@
     <h1>Voci tous vos identifiants</h1>
     {% for username in username_list %}
     <p>{{ username.username }}</p>
+    <a href="{% url 'username_update' username.pk %}">Modifier</a>
     {% endfor %}
 </body>
 </html>
