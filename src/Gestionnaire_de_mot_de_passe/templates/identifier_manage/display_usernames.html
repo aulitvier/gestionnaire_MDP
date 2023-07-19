@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Voci tous vos identifiants</h1>
+    {% for username in username_list %}
+    <p>{{ username.username }}</p>
+    {% endfor %}
+</body>
+</html>
