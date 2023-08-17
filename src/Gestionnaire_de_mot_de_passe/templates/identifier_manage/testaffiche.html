@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Identifiant(s)</title>
+</head>
+<body>
+    <p>test</p>
+    <form method="post">{% csrf_token %}
+        <table>
+            {{ form }}
+            {% for formset in inlines %}
+                {{ formset }}
+            {% endfor %}
+        </table>
+        <input type="submit" value="tester"/>
+    </form>
+    {{ message }}
+</body>
+</html>

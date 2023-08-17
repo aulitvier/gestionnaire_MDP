@@ -9,6 +9,8 @@
     {% for username in username_list %}
     <p>{{ username.username }}</p>
     <a href="{% url 'username_update' username.pk %}">Modifier</a>
+    </br>
+    <a href="{% url 'username_delete' username.pk %}">Supprimer</a>
     {% endfor %}
 </body>
 </html>

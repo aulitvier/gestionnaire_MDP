@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from identifier.views import DisplayUsernameView, UsernameCreateView, TemplateUsernameView, UsernameUpdateView
+from identifier.views import IdentifierView, TemplateIdentifierView, DisplayUsernameView, UsernameDeleteView, UsernameUpdateView
 from . import views
 
 urlpatterns = [
@@ -25,9 +25,13 @@ urlpatterns = [
     path('account/', include(('django.contrib.auth.urls', 'admin'), namespace='admin')), # url pour se connecter
     path('accounts/profile/', views.homePageLogin, name="homepage"), # url aprés connexion
     path('account/logout/', views.index),
-    path('username/create/', UsernameCreateView.as_view()),
-    path('username/create/create-username-success', TemplateUsernameView.as_view()),
-    path('username/display/', DisplayUsernameView.as_view(), name='username_display'),
-    path('username/update/<int:pk>/', UsernameUpdateView.as_view(), name='username_update'),
+    # path('username/create/', UsernameCreateView.as_view()),
+    # path('username/create/create-username-success', TemplateUsernameView.as_view()),
+    # path('username/display/', DisplayUsernameView.as_view(), name='username_display'),
+    # path('username/update/<int:pk>/', UsernameUpdateView.as_view(), name='username_update'),
+    # path('username/delete/<int:pk>/', UsernameDeleteView.as_view(), name='username_delete'),
+    path('testform/', IdentifierView.as_view()),
+    path('testform/create-username-success', TemplateIdentifierView.as_view()),
+
 
     ]
