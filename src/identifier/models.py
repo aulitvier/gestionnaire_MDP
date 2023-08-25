@@ -15,12 +15,12 @@ class Login_informations(models.Model):
     Username_id = models.ForeignKey(Username, on_delete=models.CASCADE)
     password = models.TextField()
     website_name = models.CharField(max_length=255)
-
-    def save(self, *args, **kwargs):
-        if self.password and not self.password.startswith('pbkdf2'):
-            salt = get_random_string(length=32)
-            self.password = pbkdf2(self.password.encode('utf-8'), salt.encode('utf-8'), iterations=10000, dklen=128)
-        super().save(*args, **kwargs)
+    # permet de chiffrer le mot de passe
+    # def save(self, *args, **kwargs):
+    #     if self.password and not self.password.startswith('pbkdf2'):
+    #         salt = get_random_string(length=32)
+    #         self.password = pbkdf2(self.password.encode('utf-8'), salt.encode('utf-8'), iterations=10000, dklen=128)
+    #     super().save(*args, **kwargs)
 
 
 

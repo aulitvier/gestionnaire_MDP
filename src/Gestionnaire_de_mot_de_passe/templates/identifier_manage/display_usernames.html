@@ -5,12 +5,14 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Voci tous vos identifiants</h1>
-    {% for username in username_list %}
-    <p>{{ username.username }}</p>
-    <a href="{% url 'username_update' username.pk %}">Modifier</a>
+    <h1>Voici tous vos identifiants</h1>
+    {% for identifier in login_informations_list %}
+    <p>{{ identifier.password }}</p>
+    <p>{{ identifier.website_name }}</p>
+    <p>{{ identifier.Username_id.username }}</p>
+    <a href="{% url 'username_update' identifier.Username_id.id %}">Modifier</a>
     </br>
-    <a href="{% url 'username_delete' username.pk %}">Supprimer</a>
+    <a href="{% url 'username_delete' identifier.Username_id.id %}">Supprimer</a>
     {% endfor %}
 </body>
 </html>

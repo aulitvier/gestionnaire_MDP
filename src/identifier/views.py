@@ -1,15 +1,9 @@
 from typing import Any, Dict
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, UpdateView, DeleteView
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from extra_views import CreateWithInlinesView, InlineFormSetFactory
+from django.views.generic import TemplateView, ListView, DeleteView
+from extra_views import CreateWithInlinesView, InlineFormSetFactory, UpdateWithInlinesView
 from identifier.forms import LoginInformationsForm, UsernameForm
 from identifier.models import Login_informations, Username
-from typing import Any, Dict
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView
 
  
 class LoginInformationView(InlineFormSetFactory): # classe inline de IdentifierView
@@ -17,12 +11,12 @@ class LoginInformationView(InlineFormSetFactory): # classe inline de IdentifierV
     form_class = LoginInformationsForm # nom de la classe
     factory_kwargs = {'extra': 2, 'max_num': 1, 'can_order': False, 'can_delete': False} # permet d'enlever le bouton "supprimer" et d'affiche'r le formulaire qu'une fois
 
-@method_decorator(login_required(login_url="/account/login"), name="post")
+
 class IdentifierView(CreateWithInlinesView):
     model = Username
-    inlines = [LoginInformationView]
+    inlines = [LoginInformationView] # vue du formulaire enfant
     form_class = UsernameForm
-    template_name = "identifier_manage/testaffiche.html"
+    template_name = "identifier_manage/create_identifier.html"
 
     def forms_valid(self, form, inlines):
                 user_id = self.request.user # récupère les données du formulaire
@@ -40,7 +34,6 @@ class IdentifierView(CreateWithInlinesView):
                             login_form.Username_id = form.instance.id # jointure entre username_id de login_information et l'id d'username
                     return super().forms_valid(form, inlines)
 
-        
     def form_invalid(self, form):
         # Le formulaire n'est pas valide, afficher le formulaire avec les erreurs
         return self.render_to_response(self.get_context_data(form=form))
@@ -52,15 +45,14 @@ class IdentifierView(CreateWithInlinesView):
         context = super().get_context_data(**kwargs)
         context["submit_text"] = "Créer"
         return context
+    
 
 class TemplateIdentifierView(TemplateView):
     template_name = "identifier_manage/success_identifier_create.html"
 
 
-
-
 class DisplayUsernameView(ListView):
-    model = Username
+    model = Login_informations
     template_name = "identifier_manage/display_usernames.html"
 
     def get_queryset(self):
@@ -68,13 +60,13 @@ class DisplayUsernameView(ListView):
         user_id = self.request.user.id
 
         # Filtrer les articles dont l'auteur a le même ID que l'utilisateur connecté
-        queryset = Username.objects.filter(User_id=user_id)
+        queryset = Login_informations.objects.filter(User_id=user_id)
         return queryset
     
-
-@method_decorator(login_required(login_url="/account/login"), name="post")
-class UsernameUpdateView(UpdateView):
+    
+class UsernameUpdateView(UpdateWithInlinesView):
     model = Username
+    inlines = [LoginInformationView]
     template_name = "identifier_manage/username.html"
     fields = ['username']  # Les champs que vous souhaitez modifier dans le formulaire
     success_url = reverse_lazy('username_display')

@@ -10,6 +10,9 @@
         <table>
             {% csrf_token %}
             {{ form.as_table }}
+            {% for formset in inlines %}
+                {{ formset }}
+            {% endfor %}
         </table>
         <input type="submit" value="{{ submit_text }}">
     </form>

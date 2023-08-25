@@ -6,6 +6,8 @@
 </head>
 <body>
         <h1>Bienvenue {{ form }}</h1>
-        <a href="{% url 'admin:logout' %}">Déconnexion</a>
+        <a href="{% url 'auth_app:logout' %}">Déconnexion</a><br/>
+        <a href="{% url 'username_display' %}">afficher mes identifiants.
+
 </body>
 </html>

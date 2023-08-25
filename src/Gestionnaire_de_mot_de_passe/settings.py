@@ -16,7 +16,6 @@ from dotenv import load_dotenv
 from pathlib import Path
 from django.conf import global_settings
 from django.conf.global_settings import AUTH_USER_MODEL
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -133,6 +132,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = (
+    os.path.join('Gestionnaire_de_mot_de_passe/static'),
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -144,3 +146,5 @@ PASSWORD_HASHERS = [
 ]
 
 AUTH_USER_MODEL = "user.CustomUser"
+SESSION_COOKIE_AGE = 600
+LOGIN_URL = "/account/login"
