@@ -1,11 +1,11 @@
 
 
 
-src/Gestionnaire_de_mot_de_passe/envvar
-src/Gestionnaire_de_mot_de_passe/testnul.py
+/src/Gestionnaire_de_mot_de_passe/envvar
 *.log
 *.pot
 *.pyc
 __pycache__
 media
 .env
+/src/identifier/Montest.py

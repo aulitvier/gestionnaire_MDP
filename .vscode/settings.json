@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./src/Gestionnaire_de_mot_de_passe"
+    ]
+}
