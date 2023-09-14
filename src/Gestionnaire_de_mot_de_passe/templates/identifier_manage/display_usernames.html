@@ -6,13 +6,14 @@
 </head>
 <body>
     <h1>Voici tous vos identifiants</h1>
-    {% for identifier in login_informations_list %}
-    <p>{{ identifier.password }}</p>
-    <p>{{ identifier.website_name }}</p>
-    <p>{{ identifier.Username_id.username }}</p>
-    <a href="{% url 'username_update' identifier.Username_id.id %}">Modifier</a>
+    {% for item in combined_data %}
+    <p>{{ item.login_info.website_name }}</p>
+    <p>{{ item.login_info.Username_id.username }}</p>
+    <p>{{ item.decrypted_password }}</p>
+
+    <a href="{% url 'username_update' item.login_info.User_id_id %}">Modifier</a>
     </br>
-    <a href="{% url 'username_delete' identifier.Username_id.id %}">Supprimer</a>
+    <a href="{% url 'username_delete' item.login_info.User_id_id %}">Supprimer</a>
     {% endfor %}
 </body>
 </html>

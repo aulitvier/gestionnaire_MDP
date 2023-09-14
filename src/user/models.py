@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, password, last_name, first_name, birthdate):  # paramètre pour créer un utilisateur
+    def create_user(self, email, password, last_name, first_name, birthdate, salt):  # paramètre pour créer un utilisateur
         if not email:
             raise ValueError("Vous devez rentrer une adresse email")
         
@@ -11,7 +11,8 @@ class MyUserManager(BaseUserManager):
             email=self.normalize_email(email),
             last_name=last_name,
             first_name=first_name,
-            birthdate=birthdate
+            birthdate=birthdate,
+            salt=salt
         )
         user.set_password(password)
 
@@ -30,6 +31,7 @@ class customUser(AbstractBaseUser):
     first_name = models.CharField(max_length=50)
     birthdate = models.DateField()
     premium = models.BooleanField(default=False)
+    salt = models.TextField()
 
     USERNAME_FIELD = "email"  # chammps avec lequel je souhaite que l'utilisateur s'identifit
     REQUIRED_FIELDS = ["last_name", "first_name", "birthdate"]
