@@ -10,12 +10,11 @@ from cryptography.fernet import Fernet
 import ast
 
 
-
 class LoginInformationView(InlineFormSetFactory):  # classe inline de IdentifierView
     model = Login_informations  # nom du model
     form_class = LoginInformationsForm  # nom de la classe
-    factory_kwargs = {'extra': 2, 'max_num': 1, 'can_order': False, 'can_delete': False}
     # permet d'enlever le bouton "supprimer" et d'affiche'r le formulaire qu'une fois
+    factory_kwargs = {'extra': 2, 'max_num': 1, 'can_order': False, 'can_delete': False}
 
 
 class IdentifierView(CreateWithInlinesView):
@@ -37,17 +36,18 @@ class IdentifierView(CreateWithInlinesView):
             for formset in inlines:  # permet de récupérer chaque liste du formulaire
                 for form2 in formset:
                     password_value = form2.cleaned_data.get("password")  # récupère le mot de passe
-                    # Encode et chiffre le mot de passe
                     encoded_data = password_value.encode("utf-8")  # transforme le mot de passe en bytes
                     key = get_random_bytes(16)  # clé du chiffrement AES
                     cipher = AES.new(key, AES.MODE_EAX)
-                    cipherpassword, tag = cipher.encrypt_and_digest(encoded_data)  # assignation du mot de passe chiffre et du tag
+                    # assignation du mot de passe chiffré et du tag
+                    cipherpassword, tag = cipher.encrypt_and_digest(encoded_data)
                     nonce = cipher.nonce  # creation du nonce
                     derived_key = self.request.session.get('derived_key')  # recuperation de la cle derivee
-                    derived_key_bytes = derived_key.encode('utf-8')  # transoformation de la cle derivee en bytes
+                    derived_key_bytes = derived_key.encode('utf-8')  # transoformation de la clé derivée en bytes
                     fernet = Fernet(derived_key_bytes)
                     encrypted_key = fernet.encrypt(key)  # chiffre la cle AES grace a la cle derivee
                     login_form = form2.save(commit=False)
+                    # remplace le mot de passe en clair par le mot de passe chiffré
                     login_form.password = cipherpassword
 
                     password_storage = Password_storage.objects.create(
@@ -55,24 +55,24 @@ class IdentifierView(CreateWithInlinesView):
                                                             nonce=nonce,
                                                             encrypted_key=encrypted_key
                                                         )
+                    # jointure entre login_informations_password_storage et l'id de password_storage
                     login_form.password_storage_id = password_storage.id
-                    password_storage.nonce = nonce
-                    password_storage.encrypted_key = encrypted_key
-                    password_storage.tag = tag
-
-                    login_form.User_id_id = user_id.id
                     # jointure entre User_id_id de login_informations et l'id de customuser
+                    login_form.User_id_id = user_id.id
+                    # jointure entre username_id de login_information et l'id d'username
                     login_form.Username_id = form.instance.id
-                        # jointure entre username_id de login_information et l'id d'username
             return super().forms_valid(form, inlines)
+
     def form_invalid(self, form):
         # Le formulaire n'est pas valide, afficher le formulaire avec les erreurs
         return self.render_to_response(self.get_context_data(form=form))
     
     def get_success_url(self):
+        # si la création de l'identifiant ce fait avec succès
         return "create-username-success"
     
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        # permet de garder le même template en changeant le text du bouton "submit"
         context = super().get_context_data(**kwargs)
         context["submit_text"] = "Créer"
         return context
@@ -85,6 +85,7 @@ class TemplateIdentifierView(TemplateView):
 class DisplayUsernameView(ListView):
     model = Login_informations
     template_name = "identifier_manage/display_usernames.html"
+
     def get_queryset(self, ):
         # Récupérer l'ID de l'utilisateur connecté
         user_id = self.request.user.id
@@ -92,6 +93,7 @@ class DisplayUsernameView(ListView):
         # Filtrer les articles dont l'auteur a le même ID que l'utilisateur connecté
         queryset = Login_informations.objects.filter(User_id=user_id)
         return queryset
+
     def get_context_data(self, **kwargs):
         context = super(DisplayUsernameView, self).get_context_data(**kwargs)
         combined_data = []
@@ -100,8 +102,8 @@ class DisplayUsernameView(ListView):
             fernet = Fernet(derived_key)
             password_storage = login_info.password_storage  # récupère les données de la table password_storage
             original_key = fernet.decrypt(password_storage.encrypted_key.tobytes())  # déchiffre la clé AES
-
-            cipher = AES.new(original_key, AES.MODE_EAX, nonce=password_storage.nonce) #
+            # MODE_EAX assure l'intégralitée des données
+            cipher = AES.new(original_key, AES.MODE_EAX, nonce=password_storage.nonce)
             password_bytes = ast.literal_eval(login_info.password)  # convertie le mot de passe en bytes
             tag_bytes = password_storage.tag.tobytes()  # convertie le tag en bytes
 
@@ -113,18 +115,17 @@ class DisplayUsernameView(ListView):
 
             context['combined_data'] = combined_data
         return context
-        # --------------------------------------------------------------------
 
-    
-    
+
 class UsernameUpdateView(UpdateWithInlinesView):
     model = Username
     inlines = [LoginInformationView]
     template_name = "identifier_manage/username.html"
-    fields = ['username']  # Les champs que vous souhaitez modifier dans le formulaire
+    fields = ['username']
     success_url = reverse_lazy('username_display')
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        # permet de garder le même template en changeant le text du bouton "submit"
         context = super().get_context_data(**kwargs)
         context["submit_text"] = "Modifier"
         return context

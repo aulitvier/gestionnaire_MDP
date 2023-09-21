@@ -11,9 +11,9 @@
     <p>{{ item.login_info.Username_id.username }}</p>
     <p>{{ item.decrypted_password }}</p>
 
-    <a href="{% url 'username_update' item.login_info.User_id_id %}">Modifier</a>
+    <a href="{% url 'username_update' item.login_info.Username_id_id %}">Modifier</a>
     </br>
-    <a href="{% url 'username_delete' item.login_info.User_id_id %}">Supprimer</a>
+    <a href="{% url 'username_delete' item.login_info.Username_id_id %}">Supprimer</a>
     {% endfor %}
 </body>
 </html>

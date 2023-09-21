@@ -3,7 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, password, last_name, first_name, birthdate, salt):  # paramètre pour créer un utilisateur
+    # paramètre pour créer un utilisateur
+    def create_user(self, email, password, last_name, first_name, birthdate, salt):
         if not email:
             raise ValueError("Vous devez rentrer une adresse email")
         
@@ -37,8 +38,3 @@ class customUser(AbstractBaseUser):
     REQUIRED_FIELDS = ["last_name", "first_name", "birthdate"]
     objects = MyUserManager()
 
-    def has_perm(self, perm, objet=None):
-        return True
-
-    def has_module_perms(self, app_label):
-        return True

@@ -16,6 +16,8 @@ from dotenv import load_dotenv
 from pathlib import Path
 from django.conf import global_settings
 from django.conf.global_settings import AUTH_USER_MODEL
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user',
     'identifier',
-    'identifier_user',
     'extra_views'
 ]
 
@@ -148,4 +149,4 @@ PASSWORD_HASHERS = [
 AUTH_USER_MODEL = "user.CustomUser"
 SESSION_COOKIE_AGE = 600  # durée de la session en secondes
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # ferme la session si le navigateur se ferme
-LOGIN_URL = "/account/login"
+LOGIN_URL = reverse_lazy("login")
