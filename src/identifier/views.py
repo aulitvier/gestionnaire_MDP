@@ -97,8 +97,10 @@ class DisplayUsernameView(ListView):
     def get_context_data(self, **kwargs):
         context = super(DisplayUsernameView, self).get_context_data(**kwargs)
         combined_data = []
+        print(context)
         for login_info in context['login_informations_list']:
             derived_key = self.request.session['derived_key']  # récupère la clé dérivée depuis la session
+            print(derived_key)
             fernet = Fernet(derived_key)
             password_storage = login_info.password_storage  # récupère les données de la table password_storage
             original_key = fernet.decrypt(password_storage.encrypted_key.tobytes())  # déchiffre la clé AES
@@ -124,10 +126,43 @@ class UsernameUpdateView(UpdateWithInlinesView):
     fields = ['username']
     success_url = reverse_lazy('username_display')
 
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+    def get_queryset(self, ):
+        # Récupérer l'ID de l'utilisateur connecté
+        user_id = self.request.user.id
+
+        # Filtrer les articles dont l'auteur a le même ID que l'utilisateur connecté
+        queryset = Username.objects.filter(User_id=user_id)
+        return queryset
+    # def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         # permet de garder le même template en changeant le text du bouton "submit"
-        context = super().get_context_data(**kwargs)
-        context["submit_text"] = "Modifier"
+    def get_context_data(self, **kwargs):
+        context = super(UsernameUpdateView, self).get_context_data(**kwargs)
+        # context = super().get_context_data(**kwargs)
+        # # context["submit_text"] = "Modifier"
+        # print(context["inlines"])
+        combined_data = []
+        object_id = self.kwargs['pk']
+        print(object_id)
+        login_info = Login_informations.objects.get(id=object_id)
+        #     print(self.request.session)
+        derived_key = self.request.session['derived_key']  # récupère la clé dérivée depuis la session
+        fernet = Fernet(derived_key)
+        password_storage = login_info.password_storage
+        print(password_storage.nonce)# récupère les données de la table password_storage
+        original_key = fernet.decrypt(password_storage.encrypted_key.tobytes())  # déchiffre la clé AES
+        # MODE_EAX assure l'intégralitée des données
+        cipher = AES.new(original_key, AES.MODE_EAX, nonce=password_storage.nonce)
+        password_bytes = ast.literal_eval(login_info.password)  # convertie le mot de passe en bytes
+        tag_bytes = password_storage.tag.tobytes()  # convertie le tag en bytes
+        #
+        decrypted_password = cipher.decrypt_and_verify(password_bytes, tag_bytes).decode('utf-8')
+        combined_data.append({  # ajoute les données de login_info et le mot de passe dechiffre
+                 'login_info': login_info,
+                 'decrypted_password': decrypted_password
+             })
+        #
+        context['combined_data'] = combined_data
+        print(combined_data)
         return context
     
 
