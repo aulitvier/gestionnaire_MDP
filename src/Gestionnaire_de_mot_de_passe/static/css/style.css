@@ -1,11 +1,43 @@
-table {
-    height: 200px;
+#div_form0 {
     display: flex;
-    align-items: center;
     justify-content: center;
 }
-div {
+
+#div_form {
     display: flex;
+    justify-content: center;
     align-items: center;
+    background-color: #F4F25C;
+    width: 350px;
+    height: 200px;
+    border-radius: 50px 50px 0px 0px;
+}
+
+#div_button0 {
+    display: flex;
+    justify-content: center;
+}
+#div_button {
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    align-items: center;
+    width: 350px;
+    background-color: #F4F25C;
+    border-radius: 0px 0px 50px 50px;
+}
+
+#div_message {
+    display: flex;
+    justify-content: center;
+    height: 35px;
+}
+
+#div_lien {
+    display: flex;
+    justify-content: center;
+}
+h2 {
+    display: flex;
     justify-content: center;
 }

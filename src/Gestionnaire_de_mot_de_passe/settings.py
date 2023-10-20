@@ -147,6 +147,7 @@ PASSWORD_HASHERS = [
 ]
 
 AUTH_USER_MODEL = "user.CustomUser"
-SESSION_COOKIE_AGE = 6000  # durée de la session en secondes
+# TODO ne pas oublier de regler le temps de la session
+SESSION_COOKIE_AGE = 600000  # durée de la session en secondes
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # ferme la session si le navigateur se ferme
 LOGIN_URL = reverse_lazy("login")

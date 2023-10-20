@@ -7,16 +7,29 @@
     <title>Créer un compte</title>
 </head>
 <body>
+    <h2>Je m'inscrit gratuitement</h2>
     <form method="POST">
-        <table>
-            {% csrf_token %}
-            {{ form.as_table }}
-        </table>
-        <div>
-        <input type="submit" value="valider">
+        <div id="div_form0">
+            <div id="div_form">
+                <table>
+                {% csrf_token %}
+                {{ form.as_table }}
+                </table>
+            </div>
         </div>
+        <div id="div_button0">
+            <div id="div_button">
+                <input type="submit" value="valider">
+            </div>
+        </div>
+
     </form>
-    <p>J'ai déjà un compte</p>
-    <a href="../login/">me connecter</a>
+    <div id="div_message">
+        <p>J'ai déjà un compte</p><br>
+    </div>
+    <div id="div_lien">
+        <a href="../login/">me connecter</a>
+    </div>
+
 </body>
 </html>

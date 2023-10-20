@@ -126,6 +126,11 @@ class UsernameUpdateView(UpdateWithInlinesView):
     fields = ['username']
     success_url = reverse_lazy('username_display')
 
+    def form_valid(self, form, inlines):
+        print("Formulaire valide")
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
     def get_queryset(self, ):
         # Récupérer l'ID de l'utilisateur connecté
         user_id = self.request.user.id
@@ -142,13 +147,11 @@ class UsernameUpdateView(UpdateWithInlinesView):
         # print(context["inlines"])
         combined_data = []
         object_id = self.kwargs['pk']
-        print(object_id)
         login_info = Login_informations.objects.get(id=object_id)
         #     print(self.request.session)
         derived_key = self.request.session['derived_key']  # récupère la clé dérivée depuis la session
         fernet = Fernet(derived_key)
         password_storage = login_info.password_storage
-        print(password_storage.nonce)# récupère les données de la table password_storage
         original_key = fernet.decrypt(password_storage.encrypted_key.tobytes())  # déchiffre la clé AES
         # MODE_EAX assure l'intégralitée des données
         cipher = AES.new(original_key, AES.MODE_EAX, nonce=password_storage.nonce)
@@ -162,7 +165,6 @@ class UsernameUpdateView(UpdateWithInlinesView):
              })
         #
         context['combined_data'] = combined_data
-        print(combined_data)
         return context
     
 
