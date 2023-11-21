@@ -24,7 +24,7 @@ class HomePageLoginView(View):
     template_name = "accounts/homePageLogin.html"  # après la connexion
 
     def get(self, request):
-        form = request.user.email
+        form = request.user.first_name
         return render(request, self.template_name, {"form": form})
 
 
@@ -90,6 +90,7 @@ class CustomLoginView(LoginView):
         derived_key = base64.urlsafe_b64encode(kdf.derive(main_password.encode()))
         derived_key_str = derived_key.decode('utf-8')  # transforme la clé en chaine de caractère
         self.request.session['derived_key'] = derived_key_str  # stocke la clé dérivée dans la session
+        print(derived_key_str)
 
         # après, Django gérer l'authentification
         auth_user = authenticate(self.request, username=username, password=main_password)

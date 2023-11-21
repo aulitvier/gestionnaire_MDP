@@ -1,0 +1,21 @@
+body {
+    background-color: #FFFFE7;
+}
+
+#div_create_login_button {
+    display: flex;
+    justify-content: center;
+    height: 35px;
+}
+
+#div_display_username_button {
+    display: flex;
+    justify-content: center;
+    height: 35px;
+}
+
+#div_logout_button {
+    display: flex;
+    justify-content: center;
+    height: 35px;
+}

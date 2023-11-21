@@ -1,19 +1,33 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/display_usernames.css' %}">
 </head>
 <body>
-    <h1>Voici tous vos identifiants</h1>
+    <h1>Voici tous vos identifiant(s)</h1>
+    <p>{{ error_message }}</p>
     {% for item in combined_data %}
-    <p>{{ item.login_info.website_name }}</p>
-    <p>{{ item.login_info.Username_id.username }}</p>
-    <p>{{ item.decrypted_password }}</p>
+    <div id="div_display_site">
+        <p>site : {{ item.login_info.website_name }}</p>
+    </div>
+    <div id="div_display_username">
+        <p>identifiant : {{ item.login_info.Username_id.username }}</p>
+    </div>
+    <div id="div_display_password">
+        <p>mot de passe : {{ item.decrypted_password }}</p>
+    </div>
 
-    <a href="{% url 'username_update' item.login_info.Username_id_id %}">Modifier</a>
-    </br>
-    <a href="{% url 'username_delete' item.login_info.Username_id_id %}">Supprimer</a>
+
+    <div id="div_display_update_button">
+        <a href="{% url 'username_update' item.login_info.Username_id_id %}"><button>Modifier</button></a>
+        </br>
+    </div>
+    <div id="div_display_delete_button">
+        <a href="{% url 'username_delete' item.login_info.Username_id_id %}"><button>Supprimer</button></a>
+    </div>
     {% endfor %}
 </body>
 </html>

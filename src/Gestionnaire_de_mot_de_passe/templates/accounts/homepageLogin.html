@@ -1,13 +1,22 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+
+    <title>Accueil</title>
+    <link rel="stylesheet" href="{% static 'css/homePageLogin.css' %}">
 </head>
 <body>
         <h1>Bienvenue {{ form }}</h1>
-        <a href="{% url 'login' %}">Déconnexion</a><br/>
-        <a href="{% url 'username_display' %}">afficher mes identifiants.</a>
-
+        <div id="div_create_login_button">
+            <a href="{% url 'username_create' %}"><button>Créer un identifiant</button></a>
+        </div>
+        <div id="div_display_username_button">
+            <a href="{% url 'username_display' %}"><button>afficher mes identifiants</button></a>
+        </div>
+        <div id="div_logout_button">
+            <a href="{% url 'login' %}"><button>Déconnexion</button></a><br/>
+        </div>
 </body>
 </html>

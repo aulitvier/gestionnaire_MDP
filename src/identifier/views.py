@@ -97,25 +97,26 @@ class DisplayUsernameView(ListView):
     def get_context_data(self, **kwargs):
         context = super(DisplayUsernameView, self).get_context_data(**kwargs)
         combined_data = []
-        print(context)
         for login_info in context['login_informations_list']:
-            derived_key = self.request.session['derived_key']  # récupère la clé dérivée depuis la session
-            print(derived_key)
-            fernet = Fernet(derived_key)
-            password_storage = login_info.password_storage  # récupère les données de la table password_storage
-            original_key = fernet.decrypt(password_storage.encrypted_key.tobytes())  # déchiffre la clé AES
-            # MODE_EAX assure l'intégralitée des données
-            cipher = AES.new(original_key, AES.MODE_EAX, nonce=password_storage.nonce)
-            password_bytes = ast.literal_eval(login_info.password)  # convertie le mot de passe en bytes
-            tag_bytes = password_storage.tag.tobytes()  # convertie le tag en bytes
+            try :
+                derived_key = self.request.session['derived_key']  # récupère la clé dérivée depuis la session
+                fernet = Fernet(derived_key)
+                password_storage = login_info.password_storage  # récupère les données de la table password_storage
+                original_key = fernet.decrypt(password_storage.encrypted_key.tobytes())  # déchiffre la clé AES
+                # MODE_EAX assure l'intégralitée des données
+                cipher = AES.new(original_key, AES.MODE_EAX, nonce=password_storage.nonce)
+                password_bytes = ast.literal_eval(login_info.password)  # convertie le mot de passe en bytes
+                tag_bytes = password_storage.tag.tobytes()  # convertie le tag en bytes
+                decrypted_password = cipher.decrypt_and_verify(password_bytes, tag_bytes).decode('utf-8')
+                combined_data.append({  # ajoute les données de login_info et le mot de passe dechiffre
+                    'login_info': login_info,
+                    'decrypted_password': decrypted_password
+                })
 
-            decrypted_password = cipher.decrypt_and_verify(password_bytes, tag_bytes).decode('utf-8')
-            combined_data.append({  # ajoute les données de login_info et le mot de passe dechiffre
-                'login_info': login_info,
-                'decrypted_password': decrypted_password
-            })
-
-            context['combined_data'] = combined_data
+                context['combined_data'] = combined_data
+            except KeyError:
+                context['error_message'] = "erreur de clé veuillez vous déconnecter et reconnecter"
+                return context
         return context
 
 
@@ -125,29 +126,53 @@ class UsernameUpdateView(UpdateWithInlinesView):
     template_name = "identifier_manage/username.html"
     fields = ['username']
     success_url = reverse_lazy('username_display')
+    """ la form_valid ou form_invalid ne focntionne pas sûrement parceque la requête est mal renvoyer au serveur
+    """
 
-    def form_valid(self, form, inlines): # TODO definir la validation du formulaire
+    def forms_invalid(self, form, inlines):
+        # LES DEUX FORMS NE CONTIENT PAS D'ERREUR
+        print("Erreur dans le formulaire principal :", form.errors)
+        for inline_form in inlines:
+            print("Erreur dans un formulaire en ligne :", inline_form.errors)
+        return super().forms_invalid(form, inlines)
+
+    def forms_valid(self, form, inlines):
+        # todo trouver pourquoi les formualires sont invalides
+        # TODO definir la validation du formulaire
         # todo recuperer les données envoyer du formulaire
         # todo créer un nouveau nonce, tag et clé AES
         # todo changer l'ancien mot de passe dans la BDD avec le nouveau
         # todo changer l'ancien nom du site par le nouveau
         # todo changer le tag, la cle chiffré et le nonce
         # todo enfin retourner la reponse de form_valid
-        object_id = self.kwargs['pk']
-        login_info = Login_informations.objects.get(id=object_id)
-        derived_key = self.request.session['derived_key']  # récupère la clé dérivée depuis la session
-        fernet = Fernet(derived_key)
-        password_storage = login_info.password_storage
-        original_key = fernet.decrypt(password_storage.encrypted_key.tobytes())  # déchiffre la clé AES
-        # MODE_EAX assure l'intégralitée des données
-        cipher = AES.new(original_key, AES.MODE_EAX, nonce=password_storage.nonce)
-        password_bytes = ast.literal_eval(login_info.password)  # convertie le mot de passe en bytes
-        tag_bytes = password_storage.tag.tobytes()  # convertie le tag en bytes
+        # response = super().form_valid(form, inlines)
+        print("efverve")
+        return super(UsernameUpdateView, self).forms_valid(form, inlines)
+        # print("c'est valide super trop content")
+        # for formset in inlines:
+        #     for form2 in formset:
+        #         print("form2 : ")
+        #         print(form2)
         #
-        decrypted_password = cipher.decrypt_and_verify(password_bytes, tag_bytes).decode('utf-8')
-        inlines.objects.filter(id=object_id).update(
-                password=""
-        )
+
+        # object_id = self.kwargs['pk'] ##### fait reference a l'id de l'objet en cours
+        # login_info = Login_informations.objects.get(id=object_id) ##### récupère l'objet Login_information selon l'id
+        # derived_key = self.request.session['derived_key']  # récupère la clé dérivée depuis la session
+        # fernet = Fernet(derived_key) ##### ?
+        # password_storage = login_info.password_storage ##### récupère le mot de passe chiffré
+        # original_key = fernet.decrypt(password_storage.encrypted_key.tobytes())  # déchiffre la clé AES
+        # # MODE_EAX assure l'intégralitée des données
+        # cipher = AES.new(original_key, AES.MODE_EAX, nonce=password_storage.nonce)
+        # password_bytes = ast.literal_eval(login_info.password)  # convertie le mot de passe en bytes
+        # tag_bytes = password_storage.tag.tobytes()  # convertie le tag en bytes
+        # #
+        # decrypted_password = cipher.decrypt_and_verify(password_bytes, tag_bytes).decode('utf-8')
+        # inlines.objects.filter(id=object_id).update(
+        #         password=""
+        # )
+        return response
+
+
 
         # return context
         # print("Formulaire valide")
@@ -163,33 +188,36 @@ class UsernameUpdateView(UpdateWithInlinesView):
         return queryset
     # def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         # permet de garder le même template en changeant le text du bouton "submit"
+    """
+    get_context_data sert à afficher le tableau plus les données dans ce se dernier en déchiffrant le mot de passe 
+    pour qui ne s'affiche pas chiffré
+    """
     def get_context_data(self, **kwargs):
-        pass
-        # context = super(UsernameUpdateView, self).get_context_data(**kwargs)
-        # # context = super().get_context_data(**kwargs)
-        # # # context["submit_text"] = "Modifier"
-        # # print(context["inlines"])
-        # combined_data = []
-        # object_id = self.kwargs['pk']
-        # login_info = Login_informations.objects.get(id=object_id)
-        # #     print(self.request.session)
-        # derived_key = self.request.session['derived_key']  # récupère la clé dérivée depuis la session
-        # fernet = Fernet(derived_key)
-        # password_storage = login_info.password_storage
-        # original_key = fernet.decrypt(password_storage.encrypted_key.tobytes())  # déchiffre la clé AES
-        # # MODE_EAX assure l'intégralitée des données
-        # cipher = AES.new(original_key, AES.MODE_EAX, nonce=password_storage.nonce)
-        # password_bytes = ast.literal_eval(login_info.password)  # convertie le mot de passe en bytes
-        # tag_bytes = password_storage.tag.tobytes()  # convertie le tag en bytes
-        # #
-        # decrypted_password = cipher.decrypt_and_verify(password_bytes, tag_bytes).decode('utf-8')
-        # combined_data.append({  # ajoute les données de login_info et le mot de passe dechiffre
-        #          'login_info': login_info,
-        #          'decrypted_password': decrypted_password
-        #      })
-        # #
-        # context['combined_data'] = combined_data
-        # return context
+        context = super(UsernameUpdateView, self).get_context_data(**kwargs)
+        # context = super().get_context_data(**kwargs)
+        # # context["submit_text"] = "Modifier"
+        # print(context["inlines"])
+        combined_data = []
+        object_id = self.kwargs['pk']
+        login_info = Login_informations.objects.get(id=object_id)
+        #     print(self.request.session)
+        derived_key = self.request.session['derived_key']  # récupère la clé dérivée depuis la session
+        fernet = Fernet(derived_key)
+        password_storage = login_info.password_storage
+        original_key = fernet.decrypt(password_storage.encrypted_key.tobytes())  # déchiffre la clé AES
+        # MODE_EAX assure l'intégralitée des données
+        cipher = AES.new(original_key, AES.MODE_EAX, nonce=password_storage.nonce)
+        password_bytes = ast.literal_eval(login_info.password)  # convertie le mot de passe en bytes
+        tag_bytes = password_storage.tag.tobytes()  # convertie le tag en bytes
+        #
+        decrypted_password = cipher.decrypt_and_verify(password_bytes, tag_bytes).decode('utf-8')
+        combined_data.append({  # ajoute les données de login_info et le mot de passe dechiffre
+                 'login_info': login_info,
+                 'decrypted_password': decrypted_password
+             })
+        #
+        context['combined_data'] = combined_data
+        return context
     
 
 class UsernameDeleteView(DeleteView):

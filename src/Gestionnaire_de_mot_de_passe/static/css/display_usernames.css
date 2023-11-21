@@ -1,0 +1,27 @@
+body {
+    background-color: #FFFFE7;
+}
+
+#div_display_site {
+    display: flex;
+    justify-content: center;
+}
+#div_display_username {
+    display: flex;
+    justify-content: center;
+}
+#div_display_password {
+    display: flex;
+    justify-content: center;
+}
+
+#div_display_update_button {
+    display: flex;
+    justify-content: center;
+    height: 35px;
+}
+#div_display_delete_button {
+    display: flex;
+    justify-content: center;
+    height: 35px;
+}
