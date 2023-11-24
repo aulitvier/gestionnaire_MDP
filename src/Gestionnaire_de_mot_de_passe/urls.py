@@ -15,6 +15,6 @@ urlpatterns = [
     path('username/update/<int:pk>/', login_required(UsernameUpdateView.as_view()), name='username_update'),
     path('username/delete/<int:pk>/', login_required(UsernameDeleteView.as_view()), name='username_delete'),
     path('create/username/', login_required(IdentifierView.as_view()), name='username_create'),
-    path('create/username/create-username-success', login_required(TemplateIdentifierView.as_view())),
+    path('create/username/create-username-success', login_required(TemplateIdentifierView.as_view()), name='create-username-success'),
 
     ]

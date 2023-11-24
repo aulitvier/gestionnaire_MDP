@@ -1,10 +1,11 @@
 from django.db import models
+
 from user.models import customUser
 
 
 class Username(models.Model):
     # model de l'identifiant
-    User_id = models.ForeignKey(customUser, on_delete=models.CASCADE)
+    User_id = models.ForeignKey(customUser, on_delete=models.CASCADE, blank=True, null=True)
     username = models.CharField(max_length=255)
 
 
@@ -22,3 +23,5 @@ class Login_informations(models.Model):
     password = models.TextField()
     website_name = models.CharField(max_length=255)
     password_storage = models.ForeignKey(Password_storage, on_delete=models.CASCADE)
+
+
