@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Identifiant(s)</title>
@@ -10,16 +10,7 @@
         <table>
             {% csrf_token %}
             {{ form.as_table }}
-            {% for formset in combined_data %}
-            <tr>
-                <td><label for="password">Password :</label></td>
-                <td><input type="text" name="decrypted_password" value="{{ formset.decrypted_password }}" ></td>
-            </tr>
-            <tr>
-                <td><label for="website_name">Website name :</label></td>
-                <td><input type="text" name="website_name" value="{{ formset.login_info.website_name }}" ></td>
-            </tr>
-        {% endfor %}
+            {{ child_form.as_table }}
         </table>
         <input type="submit" value="valider">
     </form>
